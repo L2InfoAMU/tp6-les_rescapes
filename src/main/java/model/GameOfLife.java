@@ -19,7 +19,7 @@ import javafx.util.Duration;
 public class GameOfLife {
 
     private final Random random = new Random();
-    private static final int PERIOD_IN_MILLISECONDS = 100;
+    private static final int PERIOD_IN_MILLISECONDS = 1000;
 
     private final Grid grid;
     private final ReadOnlyLongWrapper generationNumber = new ReadOnlyLongWrapper();

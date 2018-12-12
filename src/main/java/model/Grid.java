@@ -94,9 +94,9 @@ public class Grid implements Iterable<Cell> {
     private List<Cell> getNeighbours(int rowIndex, int columnIndex) {
         createCells();
         List<Cell> neighbours = new ArrayList<>();
-        for(int row = -1; row<=1; row ++){
+        for(int row = -1; row <= 1; row ++){
             for (int column = -1; column <= 1; column ++){
-                if (row !=0 && column!=0){
+                if (row !=0 || column!=0){
                     neighbours.add(getCell(rowIndex+row, columnIndex+column));
                 }
             }
@@ -121,7 +121,7 @@ public class Grid implements Iterable<Cell> {
     private CellState calculateNextState(int rowIndex, int columnIndex) {
         if(getCell(rowIndex, columnIndex).isAlive()){
             if(countAliveNeighbours(rowIndex, columnIndex) == 2
-                    || countAliveNeighbours(rowIndex, columnIndex)== 3){
+                    || countAliveNeighbours(rowIndex, columnIndex) == 3){
                 return CellState.ALIVE;
             }
             else{
