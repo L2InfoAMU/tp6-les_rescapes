@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -91,17 +92,50 @@ public class Grid implements Iterable<Cell> {
 
     // TODO: Écrire une version correcte de cette méthode.
     private List<Cell> getNeighbours(int rowIndex, int columnIndex) {
-        return null;
+        createCells();
+        List<Cell> neighbours = new ArrayList<>();
+        for(int row = -1; row<=1; row ++){
+            for (int column = -1; column <= 1; column ++){
+                if (row !=0 && column!=0){
+                    neighbours.add(getCell(rowIndex+row, columnIndex+column));
+                }
+            }
+        }
+        return neighbours;
+
     }
 
     // TODO: Écrire une version correcte de cette méthode.
     private int countAliveNeighbours(int rowIndex, int columnIndex) {
-        return 0;
+        int countAlive =0;
+        List<Cell> neighbours = getNeighbours(rowIndex, columnIndex);
+        for(Cell cells : neighbours){
+            if(cells.isAlive()){
+                countAlive ++;
+            }
+        }
+        return countAlive;
     }
 
     // TODO: Écrire une version correcte de cette méthode.
     private CellState calculateNextState(int rowIndex, int columnIndex) {
-        return null;
+        if(getCell(rowIndex, columnIndex).isAlive()){
+            if(countAliveNeighbours(rowIndex, columnIndex) == 2
+                    || countAliveNeighbours(rowIndex, columnIndex)== 3){
+                return CellState.ALIVE;
+            }
+            else{
+                return CellState.DEAD;
+            }
+        }
+        else{
+            if(countAliveNeighbours(rowIndex, columnIndex) == 3){
+                return CellState.ALIVE;
+            }
+            else{
+                return CellState.DEAD;
+            }
+        }
     }
 
 
@@ -109,12 +143,21 @@ public class Grid implements Iterable<Cell> {
     // TODO: Écrire une version correcte de cette méthode.
     private CellState[][] calculateNextStates() {
         CellState[][] nextCellState = new CellState[getNumberOfRows()][getNumberOfColumns()];
+        for(int row = 0; row <getNumberOfRows(); row ++){
+            for(int column =0; column < getNumberOfColumns(); column ++){
+                nextCellState[row][column]=calculateNextState(row, column);
+            }
+        }
         return nextCellState;
     }
 
     // TODO: Écrire une version correcte de cette méthode.
     private void updateStates(CellState[][] nextState) {
-
+        for (int row =0; row < getNumberOfRows(); row++){
+            for (int column =0; column < getNumberOfColumns(); column ++){
+                getCell(row, column).setState(nextState[row][column]);
+            }
+        }
     }
 
     /**
@@ -132,7 +175,8 @@ public class Grid implements Iterable<Cell> {
      */
     // TODO: Écrire une version correcte de cette méthode.
     void updateToNextGeneration() {
-
+        CellState[][] nextCellState = calculateNextStates();
+        updateStates(nextCellState);
     }
 
     /**
@@ -140,7 +184,11 @@ public class Grid implements Iterable<Cell> {
      */
     // TODO: Écrire une version correcte de cette méthode.
     void clear() {
-
+        for (int row =0; row < getNumberOfRows(); row++){
+            for (int column =0; column < getNumberOfColumns(); column ++){
+                getCell(row, column).setState(CellState.DEAD);
+            }
+        }
     }
 
     /**
@@ -151,6 +199,16 @@ public class Grid implements Iterable<Cell> {
      */
     // TODO: Écrire une version correcte de cette méthode.
     void randomGeneration(Random random) {
-
+        for (int row =0; row < getNumberOfRows(); row++){
+            for (int column =0; column < getNumberOfColumns(); column ++){
+                if(random.nextBoolean()){
+                    getCell(row, column).setState(CellState.ALIVE);
+                }
+                else{
+                    getCell(row, column).setState(CellState.DEAD);
+                }
+            }
+        }
     }
+
 }
